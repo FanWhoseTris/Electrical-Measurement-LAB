@@ -173,6 +173,26 @@
             background: #4b5563;
             transform: rotate(45deg);
         }
+        
+        .zoomable {
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .zoomable:hover {
+            transform: scale(1.05);
+            z-index: 20;
+        }
+        
+        @keyframes needle-jitter {
+            0% { margin-left: 0px; }
+            25% { margin-left: -0.5px; }
+            50% { margin-left: 0px; }
+            75% { margin-left: 0.5px; }
+            100% { margin-left: 0px; }
+        }
+        .running-needle {
+            animation: needle-jitter 0.05s infinite;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center">
@@ -324,7 +344,7 @@
                 <div class="module-title">CÔNG TƠ 1 PHA</div>
                 <div class="flex flex-col items-center relative mt-1">
                     <!-- Circular Meter -->
-                    <div class="w-32 h-32 rounded-full bg-[#111] border-[6px] border-gray-400 shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-2 relative z-10">
+                    <div class="meter-zoom-target w-32 h-32 rounded-full bg-[#111] border-[6px] border-gray-400 shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-2 relative z-10">
                         <div class="w-full h-full bg-white rounded-full p-2 flex flex-col items-center border-4 border-gray-200">
                             <div class="text-[6px] font-extrabold text-center leading-tight mt-1">CÔNG TY ĐIỆN LỰC<br>1 PHA 2 DÂY</div>
                             <!-- Counter -->
@@ -365,7 +385,7 @@
                 <div class="module-title">CÔNG TƠ 3 PHA</div>
                 <div class="w-full max-w-[140px] flex flex-col mt-2">
                     <!-- Meter Body -->
-                    <div class="w-full h-44 bg-[#111] rounded-lg shadow-2xl p-2.5 flex flex-col items-center border border-[#333] relative z-10">
+                    <div class="meter-zoom-target w-full h-44 bg-[#111] rounded-lg shadow-2xl p-2.5 flex flex-col items-center border border-[#333] relative z-10">
                         <!-- Glass screen -->
                         <div class="w-full h-24 bg-gray-200 rounded p-1 border-[3px] border-[#333] flex flex-col items-center shadow-inner relative">
                             <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/30 to-transparent pointer-events-none"></div>
@@ -512,7 +532,7 @@
                     </div>
                     
                     <!-- Kawason Device -->
-                    <div class="w-16 h-24 bg-white border-2 border-gray-300 rounded shadow-lg flex flex-col items-center p-1.5 z-10">
+                    <div class="meter-zoom-target w-16 h-24 bg-white border-2 border-gray-300 rounded shadow-lg flex flex-col items-center p-1.5 z-10">
                         <div class="text-[6px] text-blue-700 font-bold mb-1">Kawason</div>
                         <div class="w-12 h-6 bg-gray-200 border border-gray-400 rounded mb-1.5 flex items-center justify-center shadow-inner">
                             <div class="text-[5px] text-gray-500 font-mono">DIGITAL</div>
@@ -929,6 +949,12 @@
         </div>
     </div>
 
+    <!-- Zoom Overlay -->
+    <div id="zoom-overlay" class="fixed inset-0 bg-black/80 z-[1000] hidden flex justify-center items-center cursor-zoom-out opacity-0 transition-opacity duration-300" onclick="closeZoom()">
+        <div id="zoom-content" class="transform scale-0 transition-transform duration-300 pointer-events-none origin-center drop-shadow-2xl">
+        </div>
+    </div>
+
     <!-- Interactive Script -->
     <script>
         const wireLayer = document.getElementById('wire-layer');
@@ -1070,13 +1096,16 @@
 
         // --- Circuit Simulation Engine ---
         function simulateCircuit() {
-            // Reset all needles to -40deg
+            // Reset all needles
             const allNeedles = document.querySelectorAll('.meter-needle');
-            allNeedles.forEach(n => n.style.transform = 'rotate(-40deg)');
+            allNeedles.forEach(n => {
+                n.style.transform = 'rotate(-40deg)';
+                n.classList.remove('running-needle');
+            });
 
             if (!cbState) return; // No power, leave needles at 0
 
-            // Build adjacency list for zero-resistance paths (wires + ammeters)
+            // Build adjacency list for zero-resistance paths
             const graph = {};
             const addEdge = (u, v) => {
                 if (!u || !v) return;
@@ -1089,13 +1118,40 @@
             // 1. Add all drawn wires
             wiresData.forEach(w => addEdge(w.a, w.b));
 
-            // 2. Add zero-resistance internal paths (Ammeters IN to OUT)
+            // 2. Add zero-resistance internal paths
             addEdge('aac1-1', 'aac1-2');
             addEdge('aac2-1', 'aac2-2');
             addEdge('aac3-1', 'aac3-2');
             addEdge('adc-1', 'adc-2');
+            
+            ['r1', 'r2', 'r3'].forEach(r => {
+                addEdge(`${r}-0`, `${r}-1`);
+                addEdge(`${r}-1`, `${r}-2`);
+                addEdge(`${r}-2`, `${r}-3`);
+            });
+            
+            ['1', '2', '3'].forEach(i => {
+                addEdge(`lc-l${i}-in`, `lc-l${i}-out`);
+                addEdge(`lc-c${i}-in`, `lc-c${i}-out`);
+            });
+            
+            ['1', '2', '3', '4', '5', '6'].forEach(i => {
+                addEdge(`d${i}-in`, `d${i}-out`);
+            });
+            
+            addEdge('wm-1', 'wm-2');
+            addEdge('nt-1', 'nt-3');
+            addEdge('nt-2', 'nt-4');
+            addEdge('nt-3', 'nt-4');
+            addEdge('ct1-1', 'ct1-2');
+            addEdge('ct1-3', 'ct1-4');
+            addEdge('ct1-2', 'ct1-4');
+            addEdge('ct3-1', 'ct3-3');
+            addEdge('ct3-4', 'ct3-6');
+            addEdge('ct3-7', 'ct3-9');
+            addEdge('ct3-10', 'ct3-11');
 
-            // Find all nodes reachable from Phase (U, V, W) and Neutral (N)
+            // Find all nodes reachable from a start node
             function getReachableNodes(startNode) {
                 const visited = new Set();
                 const queue = [startNode];
@@ -1123,27 +1179,31 @@
             const setNeedle = (id, value, maxVal) => {
                 const el = document.getElementById(id);
                 if (el) {
-                    // map value to angle: 0 -> -40deg, maxVal -> 40deg
                     let angle = -40 + (value / maxVal) * 80;
-                    if (angle > 45) angle = 45; // cap it slightly above max
+                    if (angle > 45) angle = 45;
                     el.style.transform = `rotate(${angle}deg)`;
+                    
+                    if (value > 0) {
+                        setTimeout(() => {
+                            if (cbState) el.classList.add('running-needle');
+                        }, 500); // Wait for CSS transition to finish before shaking
+                    }
                 }
             };
 
             // Check Voltmeters
             const checkVoltmeter = (pin1, pin2, needleId, maxVal) => {
-                const hasPhase = (pin) => nodesU.has(pin) || nodesV.has(pin) || nodesW.has(pin);
-                const hasNeutral = (pin) => nodesN.has(pin);
-
-                if ((hasPhase(pin1) && hasNeutral(pin2)) || (hasNeutral(pin1) && hasPhase(pin2))) {
-                    setNeedle(needleId, 220, maxVal); // 220V on maxVal scale
-                } else if (
-                    ((nodesU.has(pin1) && nodesV.has(pin2)) || (nodesU.has(pin2) && nodesV.has(pin1))) ||
-                    ((nodesV.has(pin1) && nodesW.has(pin2)) || (nodesV.has(pin2) && nodesW.has(pin1))) ||
-                    ((nodesW.has(pin1) && nodesU.has(pin2)) || (nodesW.has(pin2) && nodesU.has(pin1)))
-                ) {
-                    setNeedle(needleId, 380, maxVal); // 380V phase-to-phase
+                const isU1 = nodesU.has(pin1), isV1 = nodesV.has(pin1), isW1 = nodesW.has(pin1), isN1 = nodesN.has(pin1);
+                const isU2 = nodesU.has(pin2), isV2 = nodesV.has(pin2), isW2 = nodesW.has(pin2), isN2 = nodesN.has(pin2);
+                let voltage = 0;
+                const diff = (a1, a2, b1, b2) => (a1 && b2) || (a2 && b1);
+                
+                if (diff(isU1, isU2, isN1, isN2) || diff(isV1, isV2, isN1, isN2) || diff(isW1, isW2, isN1, isN2)) {
+                    voltage = 220;
+                } else if (diff(isU1, isU2, isV1, isV2) || diff(isV1, isV2, isW1, isW2) || diff(isW1, isW2, isU1, isU2)) {
+                    voltage = 380;
                 }
+                setNeedle(needleId, voltage, maxVal);
             };
 
             checkVoltmeter('vac1-1', 'vac1-2', 'needle-vac1', 500);
@@ -1151,65 +1211,112 @@
             checkVoltmeter('vac3-1', 'vac3-2', 'needle-vac3', 500);
             checkVoltmeter('vdc-1', 'vdc-2', 'needle-vdc', 300);
 
-            // Check Loads (R=110 ohm)
-            const checkLoad = (loadIn, loadOut) => {
-                const inPhase = nodesU.has(loadIn) || nodesV.has(loadIn) || nodesW.has(loadIn);
-                const inNeutral = nodesN.has(loadIn);
-                const outPhase = nodesU.has(loadOut) || nodesV.has(loadOut) || nodesW.has(loadOut);
-                const outNeutral = nodesN.has(loadOut);
-
-                if ((inPhase && outNeutral) || (inNeutral && outPhase)) {
-                    return 2; // I = 220V / 110Ohm = 2A
-                }
-                return 0;
-            };
-
-            let currentL1 = checkLoad('lc-r1-in', 'lc-r1-out');
-            let currentL2 = checkLoad('lc-r2-in', 'lc-r2-out');
-            let currentL3 = checkLoad('lc-r3-in', 'lc-r3-out');
-
             // Check Ammeters
-            const checkAmmeter = (pin1, needleId) => {
-                // If ammeter is touching a phase or neutral node, and that node is part of a complete circuit
-                let current = 0;
-                if (nodesU.has(pin1) || nodesV.has(pin1) || nodesW.has(pin1) || nodesN.has(pin1)) {
-                    // Check if current is flowing through the cluster
-                    if (nodesU.has(pin1) && (nodesU.has('lc-r1-in') || nodesU.has('lc-r1-out'))) current += currentL1;
-                    if (nodesU.has(pin1) && (nodesU.has('lc-r2-in') || nodesU.has('lc-r2-out'))) current += currentL2;
-                    if (nodesU.has(pin1) && (nodesU.has('lc-r3-in') || nodesU.has('lc-r3-out'))) current += currentL3;
-
-                    if (nodesV.has(pin1) && (nodesV.has('lc-r1-in') || nodesV.has('lc-r1-out'))) current += currentL1;
-                    if (nodesV.has(pin1) && (nodesV.has('lc-r2-in') || nodesV.has('lc-r2-out'))) current += currentL2;
-                    if (nodesV.has(pin1) && (nodesV.has('lc-r3-in') || nodesV.has('lc-r3-out'))) current += currentL3;
-
-                    if (nodesW.has(pin1) && (nodesW.has('lc-r1-in') || nodesW.has('lc-r1-out'))) current += currentL1;
-                    if (nodesW.has(pin1) && (nodesW.has('lc-r2-in') || nodesW.has('lc-r2-out'))) current += currentL2;
-                    if (nodesW.has(pin1) && (nodesW.has('lc-r3-in') || nodesW.has('lc-r3-out'))) current += currentL3;
-
-                    if (nodesN.has(pin1)) {
-                        if (nodesN.has('lc-r1-in') || nodesN.has('lc-r1-out')) current += currentL1;
-                        if (nodesN.has('lc-r2-in') || nodesN.has('lc-r2-out')) current += currentL2;
-                        if (nodesN.has('lc-r3-in') || nodesN.has('lc-r3-out')) current += currentL3;
+            const checkAmmeter = (pin1, pin2, needleId, maxVal) => {
+                const getReachableWithout = (startNodes) => {
+                    const reach = new Set(startNodes);
+                    const q = [...startNodes];
+                    while(q.length > 0) {
+                        const n = q.shift();
+                        if (graph[n]) {
+                            graph[n].forEach(neighbor => {
+                                // Do not traverse through the ammeter itself
+                                if ((n === pin1 && neighbor === pin2) || (n === pin2 && neighbor === pin1)) return;
+                                if (!reach.has(neighbor)) {
+                                    reach.add(neighbor);
+                                    q.push(neighbor);
+                                }
+                            });
+                        }
                     }
+                    return reach;
+                };
+
+                const reachU = getReachableWithout(['pwr-u']);
+                const reachV = getReachableWithout(['pwr-v']);
+                const reachW = getReachableWithout(['pwr-w']);
+                const reachN = getReachableWithout(['pwr-n']);
+                
+                const hasDiff = (set1, set2) => {
+                    return (set1.has(pin1) && set2.has(pin2)) || (set1.has(pin2) && set2.has(pin1));
+                };
+
+                let current = 0;
+                if (hasDiff(reachU, reachN) || hasDiff(reachV, reachN) || hasDiff(reachW, reachN)) {
+                    current = 2.5; // Simulate normal load
+                } else if (hasDiff(reachU, reachV) || hasDiff(reachV, reachW) || hasDiff(reachW, reachU)) {
+                    current = 4.5; // Simulate Phase-to-Phase load
                 }
                 
-                // Since this ammeter might be on the main Neutral line for all 3 phases, cap it for simple UI
-                if (current > 0) setNeedle(needleId, current, 5); // Display on a 5A scale
+                setNeedle(needleId, current, maxVal);
+                return current;
             };
 
-            checkAmmeter('aac1-1', 'needle-aac1');
-            checkAmmeter('aac2-1', 'needle-aac2');
-            checkAmmeter('aac3-1', 'needle-aac3');
-            checkAmmeter('adc-1', 'needle-adc');
+            let currentTotal = 0;
+            currentTotal += checkAmmeter('aac1-1', 'aac1-2', 'needle-aac1', 5);
+            currentTotal += checkAmmeter('aac2-1', 'aac2-2', 'needle-aac2', 5);
+            currentTotal += checkAmmeter('aac3-1', 'aac3-2', 'needle-aac3', 5);
+            currentTotal += checkAmmeter('adc-1', 'adc-2', 'needle-adc', 5);
 
             // Cos Phi Meter
-            // If any load is active, show Cos Phi = 1 (since it's an R load)
-            if (currentL1 > 0 || currentL2 > 0 || currentL3 > 0) {
-                // For cos phi, max val is 1, let's just rotate it to 0deg (straight up)
-                const cosEl = document.getElementById('needle-cosphi');
-                if (cosEl) cosEl.style.transform = 'rotate(0deg)';
+            const cosEl = document.getElementById('needle-cosphi');
+            if (cosEl) {
+                if (currentTotal > 0) {
+                    cosEl.style.transform = 'rotate(0deg)';
+                    setTimeout(() => {
+                        if (cbState) cosEl.classList.add('running-needle');
+                    }, 500);
+                } else {
+                    cosEl.classList.remove('running-needle');
+                }
             }
         }
+
+        // --- ZOOM LOGIC ---
+        function openZoom(el) {
+            const overlay = document.getElementById('zoom-overlay');
+            const content = document.getElementById('zoom-content');
+            
+            const clone = el.cloneNode(true);
+            clone.classList.remove('zoomable');
+            clone.style.transform = 'none';
+            clone.style.margin = '0';
+            
+            content.innerHTML = '';
+            content.appendChild(clone);
+            
+            overlay.classList.remove('hidden');
+            
+            // Allow display block to apply before transition
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+                
+                const rect = el.getBoundingClientRect();
+                const scale = Math.min((window.innerWidth * 0.8) / rect.width, (window.innerHeight * 0.8) / rect.height, 5); 
+                content.style.transform = `scale(${scale})`;
+            });
+        }
+
+        function closeZoom() {
+            const overlay = document.getElementById('zoom-overlay');
+            const content = document.getElementById('zoom-content');
+            overlay.classList.add('opacity-0');
+            content.style.transform = 'scale(0)';
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const meters = document.querySelectorAll('.meter-case, .meter-zoom-target');
+            meters.forEach(el => {
+                el.classList.add('zoomable');
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openZoom(el);
+                });
+            });
+        });
     </script>
 </body>
 </html>
