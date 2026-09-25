@@ -204,6 +204,7 @@
             <p class="text-xs text-gray-400">Nhấp vào 2 cọc cắm để nối dây. Nhấp vào dây để xóa.</p>
         </div>
         <div class="flex gap-3">
+            
             <button onclick="clearAllWires()" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded shadow flex items-center gap-2 text-sm font-medium transition-all active:scale-95">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
                 Xóa tất cả dây
@@ -935,12 +936,23 @@
             <div class="flex gap-4">
                 <div class="w-14 h-16 bg-gray-100 rounded border-2 border-gray-400 shadow-sm flex items-center justify-center relative">
                     <div class="flex gap-3">
+            <div class="relative">
+                <button id="add-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded shadow flex items-center gap-2 text-sm font-medium transition-all active:scale-95">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    Thêm +
+                </button>
+                <div id="add-menu" class="hidden absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <button onclick="document.getElementById('vom-modal').classList.remove('hidden'); document.getElementById('add-menu').classList.add('hidden');" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Đồng hồ VOM</button>
+                </div>
+            </div>
+            
                         <div class="w-2.5 h-2.5 rounded-full bg-black shadow-inner"></div>
                         <div class="w-2.5 h-2.5 rounded-full bg-black shadow-inner"></div>
                     </div>
                 </div>
                 <div class="w-14 h-16 bg-gray-100 rounded border-2 border-gray-400 shadow-sm flex items-center justify-center relative">
                     <div class="flex gap-3">
+            
                         <div class="w-2.5 h-2.5 rounded-full bg-black shadow-inner"></div>
                         <div class="w-2.5 h-2.5 rounded-full bg-black shadow-inner"></div>
                     </div>
@@ -956,6 +968,327 @@
     </div>
 
     <!-- Interactive Script -->
+    
+<!-- VOM Modal -->
+<div id="vom-modal" class="hidden absolute top-10 left-10 w-[400px] h-[550px] bg-[#f0f0f0] border-2 border-gray-400 rounded-lg shadow-2xl flex flex-col z-50 font-sans select-none" style="resize: both; overflow: auto; min-width: 300px; min-height: 400px;">
+    <!-- Header/Drag Handle -->
+    <div id="vom-header" class="w-full bg-[#ccc] h-8 cursor-move flex items-center justify-between px-2 rounded-t-lg border-b border-gray-400">
+        <span class="font-bold text-gray-700 text-sm">Multimeter (VOM)</span>
+        <button id="vom-close" class="text-red-500 font-bold hover:text-red-700">&times;</button>
+    </div>
+
+    <!-- Body -->
+    <div class="flex-1 flex flex-col p-3 bg-[#e8e9e4]">
+        <!-- Top Half: Analog Scale -->
+        <div class="w-full bg-white border-2 border-[#8b8d86] rounded relative overflow-hidden" style="height: 220px;">
+            <svg class="w-full h-full absolute top-0 left-0" viewBox="0 0 400 270" style="background: white;">
+<g transform="translate(200, 260)">
+<path d="M -163.49186160502674 -147.20873339894882 A 220 220 0 0 1 163.49186160502674 -147.20873339894882" fill="none" stroke="black" stroke-width="1.5"/>
+<g transform="rotate(46)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(-46, 0, -230)">0</text>
+    </g>
+<g transform="rotate(41)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(-41, 0, -230)">1</text>
+    </g>
+<g transform="rotate(36)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(-36, 0, -230)">2</text>
+    </g>
+<g transform="rotate(22)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(-22, 0, -230)">5</text>
+    </g>
+<g transform="rotate(6)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(-6, 0, -230)">10</text>
+    </g>
+<g transform="rotate(-8)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(8, 0, -230)">20</text>
+    </g>
+<g transform="rotate(-16)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(16, 0, -230)">30</text>
+    </g>
+<g transform="rotate(-26)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(26, 0, -230)">50</text>
+    </g>
+<g transform="rotate(-34)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(34, 0, -230)">100</text>
+    </g>
+<g transform="rotate(-40)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(40, 0, -230)">200</text>
+    </g>
+<g transform="rotate(-44)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(44, 0, -230)">500</text>
+    </g>
+<g transform="rotate(-46)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(46, 0, -230)">1k</text>
+    </g>
+<g transform="rotate(-47.5)">
+        <line x1="0" y1="-220" x2="0" y2="-226" stroke="black" stroke-width="2"/>
+        <text x="0" y="-230" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" transform="rotate(47.5, 0, -230)">2k</text>
+    </g>
+<path d="M -129.48116406095718 -125.03850668261953 A 180 180 0 0 1 129.48116406095718 -125.03850668261953" fill="none" stroke="black" stroke-width="1.5"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(-46)"/>
+<g transform="rotate(-46)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(46, 0, -165)">0</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(46, 0, -155)">0</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(46, 0, -145)">0</text>
+        </g>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-44.16)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-42.32)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-40.480000000000004)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-38.64)"/>
+<line x1="0" y1="-180" x2="0" y2="-176" stroke="black" stroke-width="1" transform="rotate(-36.8)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-34.96)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-33.12)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-31.28)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-29.44)"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(-27.599999999999998)"/>
+<g transform="rotate(-27.599999999999998)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(27.599999999999998, 0, -165)">2</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(27.599999999999998, 0, -155)">10</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(27.599999999999998, 0, -145)">50</text>
+        </g>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-25.76)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-23.92)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-22.08)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-20.24)"/>
+<line x1="0" y1="-180" x2="0" y2="-176" stroke="black" stroke-width="1" transform="rotate(-18.400000000000002)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-16.56)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-14.719999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-12.880000000000003)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-11.04)"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(-9.199999999999996)"/>
+<g transform="rotate(-9.199999999999996)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(9.199999999999996, 0, -165)">4</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(9.199999999999996, 0, -155)">20</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(9.199999999999996, 0, -145)">100</text>
+        </g>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-7.359999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-5.520000000000003)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-3.6799999999999997)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(-1.8400000000000034)"/>
+<line x1="0" y1="-180" x2="0" y2="-176" stroke="black" stroke-width="1" transform="rotate(0)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(1.8400000000000034)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(3.680000000000007)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(5.520000000000003)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(7.359999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(9.199999999999996)"/>
+<g transform="rotate(9.199999999999996)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-9.199999999999996, 0, -165)">6</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-9.199999999999996, 0, -155)">30</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-9.199999999999996, 0, -145)">150</text>
+        </g>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(11.04)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(12.880000000000003)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(14.720000000000006)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(16.560000000000002)"/>
+<line x1="0" y1="-180" x2="0" y2="-176" stroke="black" stroke-width="1" transform="rotate(18.39999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(20.239999999999995)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(22.08)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(23.92)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(25.760000000000005)"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(27.60000000000001)"/>
+<g transform="rotate(27.60000000000001)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-27.60000000000001, 0, -165)">8</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-27.60000000000001, 0, -155)">40</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-27.60000000000001, 0, -145)">200</text>
+        </g>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(29.439999999999998)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(31.28)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(33.120000000000005)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(34.959999999999994)"/>
+<line x1="0" y1="-180" x2="0" y2="-176" stroke="black" stroke-width="1" transform="rotate(36.8)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(38.64)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(40.47999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(42.31999999999999)"/>
+<line x1="0" y1="-180" x2="0" y2="-178" stroke="black" stroke-width="1" transform="rotate(44.16)"/>
+<line x1="0" y1="-180" x2="0" y2="-174" stroke="black" stroke-width="1.5" transform="rotate(46)"/>
+<g transform="rotate(46)">
+            <text x="0" y="-165" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-46, 0, -165)">10</text>
+            <text x="0" y="-155" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-46, 0, -155)">50</text>
+            <text x="0" y="-145" font-size="9" font-family="sans-serif" text-anchor="middle" transform="rotate(-46, 0, -145)">250</text>
+        </g>
+<path d="M -97.1108730457179 -93.77888001196465 A 135 135 0 0 1 97.1108730457179 -93.77888001196465" fill="none" stroke="#ccc" stroke-width="10"/>
+<path d="M -97.1108730457179 -93.77888001196465 A 135 135 0 0 1 97.1108730457179 -93.77888001196465" fill="none" stroke="#999" stroke-width="1"/>
+<path d="M -104.3042710491044 -100.72546371655461 A 145 145 0 0 1 104.3042710491044 -100.72546371655461" fill="none" stroke="#999" stroke-width="1"/>
+<path d="M -89.91747504233139 -86.83229630737468 A 125 125 0 0 1 89.91747504233139 -86.83229630737468" fill="none" stroke="red" stroke-width="1.5"/>
+<g transform="rotate(-46)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(46, 0, -115)">0</text>
+    </g>
+<g transform="rotate(-36.8)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(36.8, 0, -115)">1</text>
+    </g>
+<g transform="rotate(-27.599999999999998)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(27.599999999999998, 0, -115)">2</text>
+    </g>
+<g transform="rotate(-18.400000000000002)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(18.400000000000002, 0, -115)">3</text>
+    </g>
+<g transform="rotate(-9.199999999999996)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(9.199999999999996, 0, -115)">4</text>
+    </g>
+<g transform="rotate(0)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(0, 0, -115)">5</text>
+    </g>
+<g transform="rotate(9.199999999999996)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(-9.199999999999996, 0, -115)">6</text>
+    </g>
+<g transform="rotate(18.39999999999999)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(-18.39999999999999, 0, -115)">7</text>
+    </g>
+<g transform="rotate(27.60000000000001)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(-27.60000000000001, 0, -115)">8</text>
+    </g>
+<g transform="rotate(36.8)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(-36.8, 0, -115)">9</text>
+    </g>
+<g transform="rotate(46)">
+        <text x="0" y="-115" font-size="8" font-family="sans-serif" fill="red" text-anchor="middle" transform="rotate(-46, 0, -115)">10</text>
+    </g>
+<path d="M -71.93398003386511 -69.46583704589973 A 100 100 0 0 1 71.93398003386511 -69.46583704589973" fill="none" stroke="#00aa00" stroke-width="1.5"/>
+<path d="M -50.353786023705574 -48.62608593212982 A 70 70 0 0 1 50.353786023705574 -48.62608593212982" fill="none" stroke="red" stroke-width="1"/>
+<path d="M -12.155372436685123 -68.93654271085457 A 70 70 0 0 1 2.442964769175068 -69.9573578913367" fill="none" stroke="red" stroke-width="4"/>
+<path d="M 2.442964769175068 -69.9573578913367 A 70 70 0 0 1 18.117333157176454 -67.61480784023477" fill="none" stroke="green" stroke-width="4"/>
+<text x="-165" y="-120" font-size="10" font-weight="bold" fill="black">DCV.A</text>
+<text x="135" y="-120" font-size="10" font-weight="bold" fill="black">DCV.A</text>
+<text x="-140" y="-100" font-size="10" font-weight="bold" fill="red">ACV</text>
+<text x="120" y="-100" font-size="10" font-weight="bold" fill="red">ACV</text>
+<text x="-120" y="-80" font-size="10" font-weight="bold" fill="#00aa00">hFE</text>
+<text x="-100" y="-55" font-size="10" font-weight="bold" fill="red">dB</text>
+<text x="90" y="-55" font-size="10" font-weight="bold" fill="red">dB</text>
+<text x="-120" y="-40" font-size="10" font-weight="bold" fill="black">BATT</text>
+<g id="meter-needle" transform="rotate(-46)" style="transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);">
+    <line x1="0" y1="0" x2="0" y2="-230" stroke="red" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="10" fill="white" stroke="#ccc" stroke-width="2" />
+    <circle cx="0" cy="0" r="4" fill="#555" />
+</g>
+</g>
+</svg>
+            
+            <div class="absolute bottom-2 left-2">
+                <div class="font-bold text-[14px] text-red-500 tracking-wider">DEGMM</div>
+            </div>
+            <div class="absolute bottom-2 right-2 flex flex-col items-end">
+                <div class="text-[12px] text-green-700 font-bold opacity-75">DE-960TR</div>
+            </div>
+        </div>
+
+        <!-- Bottom Half: Controls -->
+        <div class="w-full bg-[#3c3d39] rounded p-2 text-white flex mt-1 relative border-t-2 border-[#8b8d86] flex-1">
+            
+            <!-- Left: Jacks -->
+            <div class="flex flex-col justify-between items-center w-12 h-full py-1">
+                <div class="flex flex-col items-center">
+                    <div id="vom-jack-output" class="w-6 h-6 rounded-full border-4 border-[#222] bg-[#111] flex items-center justify-center relative shadow-inner cursor-pointer" onclick="handleJackClick(event, 'vom-out')">
+                        <div class="w-3 h-3 rounded-full bg-black"></div>
+                    </div>
+                    <div class="text-red-500 font-bold text-[7px] mt-1">OUTPUT</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div id="vom-jack-25a" class="w-6 h-6 rounded-full border-4 border-[#222] bg-[#111] flex items-center justify-center relative shadow-inner cursor-pointer" onclick="handleJackClick(event, 'vom-25a')">
+                        <div class="w-3 h-3 rounded-full bg-black"></div>
+                    </div>
+                    <div class="text-red-500 font-bold text-[9px] mt-1">2.5A</div>
+                </div>
+            </div>
+
+            <!-- Center: Knob -->
+            <div class="flex-1 flex items-center justify-center relative">
+                <!-- Knob scale values -->
+                <svg class="absolute w-[300px] h-[300px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" viewBox="-150 -150 300 300">
+<path d="M 19.670247427791576 -73.41036279796919 A 76 76 0 0 1 65.81793068761735 -37.99999999999999" fill="none" stroke="#ff4444" stroke-width="2"/>
+<path d="M 76 0 A 76 76 0 0 1 38.00000000000001 65.81793068761733" fill="none" stroke="#00ff00" stroke-width="2"/>
+<path d="M 19.670247427791576 73.41036279796919 A 76 76 0 0 1 4.653657836759942e-15 76" fill="none" stroke="white" stroke-width="2"/>
+<path d="M -19.670247427791583 73.41036279796919 A 76 76 0 0 1 -65.81793068761735 37.99999999999999" fill="none" stroke="white" stroke-width="2"/>
+<path d="M -73.41036279796919 19.670247427791598 A 76 76 0 0 1 -19.67024742779157 -73.41036279796919" fill="none" stroke="white" stroke-width="2"/>
+<text x="5.633375276077825e-15" y="-92" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">OFF</text>
+<line x1="18.117333157176454" y1="-67.61480784023477" x2="19.670247427791576" y2="-73.41036279796919" stroke="#ff4444" stroke-width="2" />
+<text x="24.84662832984199" y="-92.72887932375056" font-size="11" font-weight="bold" fill="#ff4444" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">1000</text>
+<line x1="35.00000000000001" y1="-60.6217782649107" x2="38.00000000000001" y2="-65.81793068761733" stroke="#ff4444" stroke-width="2" />
+<text x="46.00000000000001" y="-79.67433714816835" font-size="11" font-weight="bold" fill="#ff4444" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">250</text>
+<line x1="49.49747468305833" y1="-49.49747468305832" x2="53.74011537017761" y2="-53.740115370177605" stroke="#ff4444" stroke-width="2" />
+<text x="65.05382386916237" y="-65.05382386916237" font-size="11" font-weight="bold" fill="#ff4444" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">50</text>
+<line x1="60.62177826491071" y1="-34.99999999999999" x2="65.81793068761735" y2="-37.99999999999999" stroke="#ff4444" stroke-width="2" />
+<text x="79.67433714816836" y="-45.99999999999999" font-size="11" font-weight="bold" fill="#ff4444" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">10</text>
+<line x1="70" y1="0" x2="76" y2="0" stroke="white" stroke-width="2" />
+<text x="96" y="0" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">x10K</text>
+<line x1="67.61480784023477" y1="18.117333157176454" x2="73.41036279796919" y2="19.670247427791576" stroke="white" stroke-width="2" />
+<text x="88.86517601859428" y="23.811352149431908" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">x1K</text>
+<line x1="60.62177826491071" y1="34.99999999999999" x2="65.81793068761735" y2="37.99999999999999" stroke="white" stroke-width="2" />
+<text x="83.13843876330611" y="47.99999999999999" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">x100</text>
+<line x1="49.49747468305833" y1="49.49747468305832" x2="53.74011537017761" y2="53.740115370177605" stroke="white" stroke-width="2" />
+<text x="65.05382386916237" y="65.05382386916237" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">x10</text>
+<line x1="35.00000000000001" y1="60.6217782649107" x2="38.00000000000001" y2="65.81793068761733" stroke="white" stroke-width="2" />
+<text x="46.00000000000001" y="79.67433714816835" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">x1</text>
+<line x1="18.117333157176454" y1="67.61480784023477" x2="19.670247427791576" y2="73.41036279796919" stroke="white" stroke-width="2" />
+<text x="23.811352149431908" y="88.86517601859428" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">9V</text>
+<line x1="4.2862637970157365e-15" y1="70" x2="4.653657836759942e-15" y2="76" stroke="white" stroke-width="2" />
+<text x="5.878304635907295e-15" y="96" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">1.5V</text>
+<line x1="-18.11733315717646" y1="67.61480784023477" x2="-19.670247427791583" y2="73.41036279796919" stroke="white" stroke-width="2" />
+<text x="-23.81135214943192" y="88.86517601859428" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">250</text>
+<line x1="-34.999999999999986" y1="60.62177826491071" x2="-37.999999999999986" y2="65.81793068761735" stroke="white" stroke-width="2" />
+<text x="-45.99999999999998" y="79.67433714816836" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">25</text>
+<line x1="-49.49747468305832" y1="49.49747468305833" x2="-53.740115370177605" y2="53.74011537017761" stroke="white" stroke-width="2" />
+<text x="-67.88225099390856" y="67.88225099390857" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">2.5 A</text>
+<line x1="-60.62177826491071" y1="34.99999999999999" x2="-65.81793068761735" y2="37.99999999999999" stroke="white" stroke-width="2" />
+<text x="-83.13843876330611" y="47.99999999999999" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">50�A</text>
+<line x1="-67.61480784023477" y1="18.11733315717647" x2="-73.41036279796919" y2="19.670247427791598" stroke="white" stroke-width="2" />
+<text x="-88.86517601859427" y="23.811352149431933" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">0.1</text>
+<line x1="-70" y1="8.572527594031473e-15" x2="-76" y2="9.307315673519884e-15" stroke="white" stroke-width="2" />
+<text x="-92" y="1.126675055215565e-14" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">0.5</text>
+<line x1="-67.61480784023479" y1="-18.117333157176425" x2="-73.4103627979692" y2="-19.670247427791548" stroke="white" stroke-width="2" />
+<text x="-88.8651760185943" y="-23.811352149431873" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">2.5</text>
+<line x1="-60.6217782649107" y1="-35.00000000000001" x2="-65.81793068761733" y2="-38.00000000000001" stroke="white" stroke-width="2" />
+<text x="-79.67433714816835" y="-46.00000000000001" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">10</text>
+<line x1="-49.497474683058336" y1="-49.49747468305832" x2="-53.74011537017763" y2="-53.740115370177605" stroke="white" stroke-width="2" />
+<text x="-65.05382386916239" y="-65.05382386916237" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">50</text>
+<line x1="-35.00000000000003" y1="-60.621778264910695" x2="-38.000000000000036" y2="-65.81793068761732" stroke="white" stroke-width="2" />
+<text x="-46.00000000000004" y="-79.67433714816833" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">250</text>
+<line x1="-18.117333157176443" y1="-67.61480784023477" x2="-19.67024742779157" y2="-73.41036279796919" stroke="white" stroke-width="2" />
+<text x="-24.84662832984198" y="-92.72887932375056" font-size="11" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">1000</text>
+<text x="73.05137148104647" y="-95.20240083494822" font-size="14" font-weight="bold" fill="#ff4444" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">ACV</text>
+<text x="55.000000000000014" y="95.26279441628824" font-size="18" font-weight="bold" fill="#00ff00" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">O</text>
+<text x="15.010512105305947" y="114.01615905798819" font-size="12" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">BATT</text>
+<text x="-73.05137148104647" y="95.20240083494822" font-size="13" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">DCmA</text>
+<text x="-103.92304845413263" y="-60.000000000000014" font-size="14" font-weight="bold" fill="white" font-family="sans-serif, Arial" text-anchor="middle" dominant-baseline="central">DCV</text>
+</svg>
+                <!-- Knob Element -->
+                <div id="vom-knob" class="w-32 h-32 rounded-full bg-[#2a2b27] border-4 border-[#1a1b17] shadow-xl relative cursor-pointer z-10 flex items-center justify-center">
+                    <div class="w-full h-2 bg-white absolute top-1/2 left-0 transform -translate-y-1/2 pointer-events-none"></div>
+                    <div class="w-24 h-24 rounded-full bg-[#333]"></div>
+                </div>
+            </div>
+
+            <!-- Right: Jacks & Zero Ohm Adjust -->
+            <div class="flex flex-col justify-between items-center w-12 h-full py-1">
+                <div class="flex flex-col items-center">
+                    <div id="vom-jack-com" class="w-6 h-6 rounded-full border-4 border-[#222] bg-[#111] flex items-center justify-center relative shadow-inner cursor-pointer" onclick="handleJackClick(event, 'vom-com')">
+                        <div class="w-3 h-3 rounded-full bg-[#ccc]"></div>
+                    </div>
+                    <div class="text-white font-bold text-[9px] mt-1">-COM</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div id="vom-jack-p" class="w-6 h-6 rounded-full border-4 border-[#222] bg-[#111] flex items-center justify-center relative shadow-inner cursor-pointer" onclick="handleJackClick(event, 'vom-p')">
+                        <div class="w-3 h-3 rounded-full bg-[#ccc]"></div>
+                    </div>
+                    <div class="text-white font-bold text-[9px] mt-1">+</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
     <script>
         const wireLayer = document.getElementById('wire-layer');
         let selectedJack = null;
@@ -1317,6 +1650,54 @@
                 });
             });
         });
+            
+        const addBtn = document.getElementById("add-btn");
+        const addMenu = document.getElementById("add-menu");
+        if (addBtn && addMenu) {
+            addBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                addMenu.classList.toggle("hidden");
+            });
+            document.addEventListener("click", () => {
+                addMenu.classList.add("hidden");
+            });
+        }
+
+        // --- NEW: VOM Logic ---
+        let isDraggingVOM = false;
+        let vomOffsetX, vomOffsetY;
+        const vomModal = document.getElementById('vom-modal');
+        const vomHeader = document.getElementById('vom-header');
+        const vomClose = document.getElementById('vom-close');
+
+        if (vomHeader && vomModal) {
+            vomHeader.addEventListener('mousedown', (e) => {
+                isDraggingVOM = true;
+                vomOffsetX = e.clientX - vomModal.getBoundingClientRect().left;
+                vomOffsetY = e.clientY - vomModal.getBoundingClientRect().top;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDraggingVOM) {
+                    vomModal.style.left = (e.clientX - vomOffsetX) + 'px';
+                    vomModal.style.top = (e.clientY - vomOffsetY) + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDraggingVOM = false;
+            });
+            
+            if (vomClose) {
+                vomClose.addEventListener('click', () => {
+                    vomModal.classList.add('hidden');
+                });
+            }
+        }
     </script>
 </body>
 </html>
+
+
+
+
